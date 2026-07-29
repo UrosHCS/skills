@@ -6,4 +6,4 @@ disable-model-invocation: true
 
 Implement the work described by the user in the spec or tickets.
 
-Once done, use /code-review to review the work, then address the feedback.
+Once done, use /advanced-review to review the work, then address the feedback.

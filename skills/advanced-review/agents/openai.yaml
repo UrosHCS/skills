@@ -1,3 +1,5 @@
 interface:
-  display_name: "Code Review"
-  short_description: "Review a diff on standards and spec"
+  display_name: "Advanced Review"
+  short_description: "Two sub-agents do a review"
+policy:
+  allow_implicit_invocation: true

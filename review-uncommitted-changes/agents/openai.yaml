@@ -1,0 +1,5 @@
+interface:
+  display_name: "Review uncommitted changes"
+  short_description: "Review the uncommitted changes in the current branch"
+policy:
+  allow_implicit_invocation: false
