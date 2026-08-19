@@ -1,0 +1,13 @@
+{
+  "name": "uroshcs-skills",
+  "owner": {
+    "name": "Uros"
+  },
+  "plugins": [
+    {
+      "name": "uroshcs-skills",
+      "source": "./",
+      "description": "Uros's personal workflow skills."
+    }
+  ]
+}
