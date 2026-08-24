@@ -2,4 +2,4 @@ interface:
   display_name: "Implement"
   short_description: "Implement a piece of work based on a spec. Use only when asked by the user."
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false
