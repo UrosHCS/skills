@@ -1,0 +1,5 @@
+interface:
+  display_name: "GitHub issue response"
+  short_description: "Respond to a GitHub issue."
+policy:
+  allow_implicit_invocation: false

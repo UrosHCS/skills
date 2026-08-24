@@ -1,6 +1,7 @@
 ---
-name: implement-or-object
+name: object-or-implement
 description: "Implement the feedback if you agree, or object if you don't."
+disable-model-invocation: true
 ---
 
 If you agree with the given feedback, implement/fix it.

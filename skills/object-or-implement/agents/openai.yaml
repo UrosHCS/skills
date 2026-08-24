@@ -1,0 +1,5 @@
+interface:
+  display_name: "Object or Implement"
+  short_description: "Implement the feedback if you agree, or object if you don't."
+policy:
+  allow_implicit_invocation: false
