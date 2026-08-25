@@ -1,0 +1,6 @@
+interface:
+  display_name: "GitLab MR Summary"
+  short_description: "Draft and publish GitLab MR summaries"
+
+policy:
+  allow_implicit_invocation: false
