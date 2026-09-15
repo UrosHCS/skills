@@ -1,0 +1,7 @@
+interface:
+  display_name: "GitLab MR Summary"
+  short_description: "Draft and publish GitLab MR summaries"
+  default_prompt: "Use $gitlab-mr-summary to draft and publish the current branch MR summary."
+
+policy:
+  allow_implicit_invocation: false
