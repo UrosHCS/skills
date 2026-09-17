@@ -17,7 +17,7 @@ Both axes run as **parallel sub-agents** so they don't pollute each other's cont
 
 Remember the current branch name, or the detached SHA if HEAD is detached. Restore that ref after the review, and if you stop early after checking out the MR, so the worktree is not left detached.
 
-1. Confirm `origin` is a GitLab remote and a zynca GitLab repository (`git config --get remote.origin.url`). Confirm `glab` is authenticated (`glab auth status`). Confirm the worktree is clean (`git status --porcelain`). If any check fails, respond with a clear error and do not continue.
+1. Confirm `origin` is a GitLab remote and a zynca GitLab repository (`git config --get remote.origin.url`). Confirm `glab` is authenticated (`glab auth status` - if it reports a missing token/keyring credential inside the sandbox, retry it with sandbox escalation). Confirm the worktree is clean (`git status --porcelain`). If any check fails, respond with a clear error and do not continue.
 
 ## Resolve the MR
 
