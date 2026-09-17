@@ -1,0 +1,6 @@
+interface:
+  display_name: "GitLab MR Review"
+  short_description: "Draft and publish GitLab MR review"
+
+policy:
+  allow_implicit_invocation: false

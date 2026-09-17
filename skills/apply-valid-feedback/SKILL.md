@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 Read the given feedback. For each point, decide: agree, partially agree, or disagree.
 
+You should disagree with feedback that adds complexity without adding much value.
+
 Implement changes for every point you agree with at least partially. Skip the rest.
 
 Respond with a list of your decisions and why.
