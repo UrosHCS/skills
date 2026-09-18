@@ -47,6 +47,8 @@ Do not use `glab mr diff` as the review input. Once HEAD is `head_sha` and the f
 
 Capture the diff command once: `git diff <base_sha>...HEAD`. Also note `git log <base_sha>..HEAD --oneline`.
 
+Do not run any check commands, like type checks, linters, or tests. Explain to each sub-agent that these checks are not part of the review.
+
 ### Standards sources
 
 Anything in the repo that documents how code should be written, such as `CODING_STANDARDS.md` or `CONTRIBUTING.md`.
