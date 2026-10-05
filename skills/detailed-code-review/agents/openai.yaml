@@ -1,0 +1,5 @@
+interface:
+  display_name: "Detailed Code Review"
+  short_description: "Up to six parallel reviewers review a diff"
+policy:
+  allow_implicit_invocation: true

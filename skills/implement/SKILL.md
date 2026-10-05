@@ -10,6 +10,6 @@ Use /write-tests where possible, at pre-agreed seams.
 
 Run typechecking regularly, single test files regularly, and the full test suite once at the end.
 
-Once done, use /advanced-review to review the work.
+Once done, use /detailed-code-review to review the work.
 
 Do not commit your work.

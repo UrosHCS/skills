@@ -2,4 +2,4 @@ interface:
   display_name: "Advanced Review"
   short_description: "Two sub-agents do a review"
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false
