@@ -41,7 +41,7 @@ Take numbers from the diff hunks (`@@ -old +new @@` plus the `+`/`-`/context lin
 
 - 🔴 **Must fix**: wrong behaviour, a security or data-loss risk, a breached hard rule, or a missing or wrong requirement.
 - 🟡 **Should fix**: a real cost to maintainability, performance, or fit that is worth paying down in this change.
-- ⚪ **Consider**: a judgement call or small improvement. At most 5; keep the most useful.
+- ⚪ **Consider**: a judgement call or small improvement. The aggregator applies the suggestion cap; don't cap these findings yourself.
 
 **Confidence:**
 
@@ -51,4 +51,4 @@ Take numbers from the diff hunks (`@@ -old +new @@` plus the `+`/`-`/context lin
 
 ## Output
 
-Findings in the format above, most severe first, or exactly `No findings.` Under 400 words. No preamble, no praise, no summary of the change.
+Findings in the format above, most severe first, or exactly `No findings.` Keep individual findings concise; never omit significant findings to meet a word limit. No preamble, no praise, no summary of the change.

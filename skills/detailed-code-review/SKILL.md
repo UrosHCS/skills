@@ -1,6 +1,6 @@
 ---
 name: detailed-code-review
-description: 'Detailed code review of a diff (changes since a commit, branch, tag, or merge-base, or the current unstaged changes) by up to six parallel sub-agent reviewers: Standards, Spec, Simplicity, Correctness, and, when the change calls for them, Design and Data access. Each reviewer reports separately with line-pinned, severity-labelled findings. Use when the user wants to review a branch, a PR or MR, work-in-progress changes, or asks to "review since X". Other skills (for example an MR review flow) can call it with a ready diff command and spec and post its findings.'
+description: Review branch, PR/MR, or unstaged changes with independent specialist reviewers and evidence-backed, line-pinned findings. Use for detailed code reviews or reviews since a specified Git ref.
 ---
 
 # Detailed Code Review
