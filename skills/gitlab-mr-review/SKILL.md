@@ -1,79 +1,72 @@
 ---
 name: gitlab-mr-review
-description: Review an existing GitLab merge request against the SHAs GitLab stored for that MR, using the detailed-code-review skill and an optional Jira spec, then preview and post inline comments. Use when asked to review a GitLab MR by URL, iid, or the MR for the current branch. Do not use for GitHub pull requests.
+description: Review an existing GitLab merge request
 disable-model-invocation: true
 ---
 
 # GitLab MR Review
 
-Reviews the merge request's stored diff (`git diff <base_sha>...HEAD` once HEAD is `head_sha`) with the `detailed-code-review` skill, which runs its parallel reviewers and returns line-pinned findings. Findings are previewed, then posted as inline MR comments only after the user confirms.
-
 ## Preconditions
 
-Remember the current branch name, or the detached SHA if HEAD is detached. Restore that ref after the review, and if you stop early after checking out the MR, so the worktree is not left detached.
-
-1. Confirm `origin` is a GitLab remote and a zynca GitLab repository (`git config --get remote.origin.url`). Confirm `glab` is authenticated (`glab auth status` - if it reports a missing token/keyring credential inside the sandbox, retry it with sandbox escalation). Confirm the worktree is clean (`git status --porcelain`). If any check fails, respond with a clear error and do not continue.
+1. Confirm `origin` is a GitLab remote for a zynca repository (`git config --get remote.origin.url`) and that `glab` is authenticated (`glab auth status`). Stop with a clear error if either check fails. A dirty checkout is fine. When the sandbox blocks a command — a missing keyring credential, `git fetch`, or `git worktree` — retry that command with sandbox escalation.
 
 ## Resolve the MR
 
-2. Resolve the MR iid from a GitLab URL, an iid, or the open MR for the current branch (`glab mr view`).
+2. Resolve the iid from a GitLab URL, an iid, or `glab mr view` on the current branch. Read that branch from the user's checkout, before the review worktree exists.
 
-3. Use `glab mr view <mr-iid> --output json | jq '{source_branch, target_branch, title, description, sha, diff_refs}'` to get the MR details. Keep `diff_refs.base_sha` and `diff_refs.head_sha`. Review and comment placement follow those SHAs, not local branch names.
+3. Read `glab mr view <mr-iid> --output json | jq '{source_branch, target_branch, title, description, diff_refs}'`. The review diff and every comment pin use `diff_refs.base_sha` and `diff_refs.head_sha`.
 
-## Fetch the MR tree
+## Review worktree
 
-4. Fetch the MR head and detach onto GitLab's `head_sha`. Do not `git pull`. Do not check out the source or target branch names.
+4. Detach a sibling worktree at `head_sha`, so the user's checkout keeps its branch.
 
 ```bash
 git fetch origin refs/merge-requests/<mr-iid>/head
-git fetch origin <target_branch>   # so base_sha exists locally
-git checkout --detach <diff_refs.head_sha>
+git fetch origin <target_branch>   # base_sha must exist locally
+REPO=$(git rev-parse --show-toplevel)
+WORKTREE="$(dirname "$REPO")/$(basename "$REPO")-mr-<mr-iid>"
+git worktree add --detach "$WORKTREE" <diff_refs.head_sha>
 ```
 
-If the merge-request ref is missing, `git fetch origin <source_branch>` instead, then detach onto `head_sha`. Confirm `git rev-parse HEAD` equals `diff_refs.head_sha`. Do not review unpushed local commits that are not in the MR.
+If the merge-request ref is missing, `git fetch origin <source_branch>` and add the worktree at `head_sha`. Reuse `$WORKTREE` when it is already a worktree whose HEAD equals `head_sha`. Otherwise `git worktree remove --force` it, `git worktree prune` if the path stays registered, and create it again.
 
-Do not use `glab mr diff` as the review input. Once HEAD is `head_sha` and the fixed point is `base_sha`, `git diff <base_sha>...HEAD` is the same three-dot diff GitLab stored for this MR version. Confirm `base_sha` resolves and that diff is non-empty before starting the review.
+Done when `git -C "$WORKTREE" rev-parse HEAD` equals `diff_refs.head_sha`, `base_sha` resolves, and `git -C "$WORKTREE" diff <base_sha>...HEAD` is non-empty. That diff is the review input. Run every later `git` command and file read in this worktree.
 
-## Spec source
+## Spec
 
-5. If the MR details contain a jira ticket id in the format `PRO-####`, use `acli jira workitem view PRO-#### --fields "summary,description"` to get the ticket info. Do not follow links from the description or try to view images. Spec's primary source is the jira ticket info (if any); MR title and description are secondary. If both are thin, there is no spec: pass "none" rather than fabricating one.
+5. If the MR names `PRO-####`, start the spec with `acli jira workitem view PRO-#### --fields "summary,description"` — those two fields — then the MR title and description. With no ticket, the spec is the MR title and description. When that text names no behaviour to check, the spec is `none`.
 
 ## Review
 
-6. Read the `detailed-code-review` skill (`../detailed-code-review/SKILL.md`, next to this skill's directory) and follow it as a calling skill, with these inputs:
+6. Read [`../detailed-code-review/SKILL.md`](../detailed-code-review/SKILL.md) and follow it as the caller:
 
-- **Diff command**: `git diff <base_sha>...HEAD`.
-- **Commit list command**: `git log <base_sha>..HEAD --oneline`.
-- **Spec**: the Jira ticket summary and description, followed by the MR title and description, as spec text; or "none".
-- **Overrides**: pass on any the user gave (`+design`, `-data`, ...).
+- **Diff command**: `git -C <worktree> diff <base_sha>...HEAD`
+- **Commit list command**: `git -C <worktree> log <base_sha>..HEAD --oneline`
+- **Review root**: the worktree's absolute path, prefixed onto every changed-file path
+- **Spec**: step 5
+- **Overrides**: any the user gave (`+design`, `-data`, ...)
 
-Because these inputs are supplied, the review does not ask the user anything. Show the user its report as returned.
+Show the report unchanged.
 
-Restore the original branch (or detached SHA) now that the review is done.
+## Preview, then post
 
-## Preview then post
+7. With zero findings, tell the user.
 
-If the review has zero findings, say so and do not post.
+8. Otherwise show each comment you will post, then wait. An explicit yes creates the notes. Any other reply leaves them unposted. For each comment show the path, the pin (`line`, `old_line`, or unpinned), the reviewer, and the exact `-m` text. One finding per `-m`: its report section, severity, the finding, and the suggested fix. If the MR already has unresolved discussions, say so in that preview.
 
-Otherwise pick the findings to post: 🔴 and 🟡 only, most severe first, at most 8 inline comments. Put any remaining 🔴 and 🟡 findings in one short overview thread. Skip ⚪ findings and praise.
+`glab mr note create <mr-iid>`:
 
-Show the proposed GitLab comments before posting: path, `line` / `old_line` or unpinned, reviewer, and the exact `-m` text. Each `-m` is one finding, labelled with its reviewer (the report section it came from) and severity, and includes the finding and its suggested fix. Do not paste the whole review into one message. If the MR already has unresolved discussions, mention that in the preview so a second run is an explicit choice. Do not use `--unique` (it cannot combine with `--file`).
+- `line N` → `--file <path> --line N`; `line N-M` → `--line N:M`
+- `old_line N` → `--file <path> --old-line N`
+- a path and no line → `--file <path>`
+- `unpinned` → omit `--file` and both line flags
 
-Do not post until the user explicitly confirms.
+A failed create stops the posting. Report the error and keep the pin the review gave.
 
-Then post each selected finding as its own inline comment. A `line N` pin maps to `--line N`; a range `line N-M` maps to `--line N:M`; an `old_line N` pin maps to `--old-line N` (removed lines only). Omit both line flags for a file-level comment. If a finding is `unpinned`, post it as a general comment on the MR.
+## Finish
 
-Post with `glab mr note create` (not `glab mr comment add`):
+9. Remove the worktree when the review is done or cancelled.
 
 ```bash
-# added or unchanged line on the new side
-glab mr note create <mr-iid> --file path/to/file.go --line 42 -m "…"
-
-# removed line on the old side
-glab mr note create <mr-iid> --file path/to/file.go --old-line 7 -m "…"
-
-# optional: one short overview thread, not a paste of every finding
-glab mr note create <mr-iid> -m "…"
+git worktree remove --force "$WORKTREE"
 ```
-
-After a failed note create (line not in the latest diff, rename path, stale SHA), stop and report. Do not retry with guessed line numbers.
