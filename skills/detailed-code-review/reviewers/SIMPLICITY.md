@@ -10,10 +10,22 @@ Most of these checks need the codebase, not just the diff: search for what alrea
 
 - **Reinvention**: new code that does what an existing helper, module, installed dependency, standard library, or platform API already does. Name the existing thing and where it lives.
 - **Dependency weight**: a new package that is overkill for how it is used: a one-liner, something an existing dependency or the platform already covers, or a large package used for one small feature. Check the manifest diff (`package.json`, `composer.json`, `go.mod`, `requirements*.txt`, `Cargo.toml`, ...).
-- **Convention drift**: code that does something differently from how neighbouring code does the same thing (error handling, data access, validation, file layout, naming, testing style). Point at the example it should match. Written rules belong to Standards; these are the unwritten ones.
 - **Needless complexity**: abstractions, options, parameters, or hooks with no current user; indirection that adds nothing; defensive handling of states that can't practically happen.
 - **Cleaner expression**: convoluted control flow with a simpler equivalent, dead or unreachable code, leftover debug output or commented-out code.
 - **Efficiency**: repeated or wasted work (recomputing in a loop, quadratic scans of large collections, unnecessary re-renders, reading a whole file to use one line). Only where it matters: say why the path is hot or the data large.
+
+## Convention drift
+
+Check each changed implementation against established codebase conventions: implementation patterns, architecture, naming, file organization, and style. Written rules belong to Standards.
+
+1. Search for and read comparable implementations, starting in the affected subsystem and widening the search when local evidence is insufficient.
+2. Establish the prevailing pattern among those implementations. A clear subsystem convention takes precedence over a repository-wide majority; mixed conventions without a clear prevailing pattern warrant no finding.
+3. Check whether the pattern applies. Concrete constraints or a documented migration can justify a departure; intentional choice alone does not.
+4. Flag unjustified departures even when the code works correctly. Cite at least two comparable examples when available and explain how to align the change. If only one comparable implementation exists, cite it and state that limitation.
+
+Done when each changed implementation has been checked against an established pattern, found to have no clear precedent, or found to have a justified departure. Keep this accounting internal; report findings only.
+
+Use 🟡 for implementation or structural departures. Use ⚪ for minor naming or stylistic differences unless their broader impact warrants 🟡.
 
 ## Smell baseline
 
@@ -39,10 +51,10 @@ Each smell reads _what it is_ → _how to fix_:
 
 ## Severity
 
-- 🟡 for reinvention, an overkill dependency, convention drift, or complexity that will cost future changes;
+- 🟡 for reinvention, an overkill dependency, or complexity that will cost future changes;
 - ⚪ for smaller cleanups and every baseline smell that isn't clearly costly.
 
 ## Not yours
 
 - Bugs: Correctness. Written rules: Standards. Query performance: Data access.
-- Whether a new concept should have a different overall shape: Design. You judge the code at the level of hunks and functions.
+- Design judges whether a new architectural precedent is the right shape for future work. You judge consistency with established patterns, including structural conventions.
