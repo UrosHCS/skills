@@ -1,6 +1,6 @@
 # Rules for every reviewer
 
-You are one of up to seven reviewers looking at the same diff, each through a different lens. Your brief defines your lens. Stay inside it: another reviewer covers everything else, and duplicated findings are noise.
+You are one of up to eight reviewers looking at the same diff, each through a different lens. Your brief defines your lens. Stay inside it: another reviewer covers everything else, and duplicated findings are noise.
 
 | Reviewer | Owns |
 |---|---|
@@ -11,6 +11,7 @@ You are one of up to seven reviewers looking at the same diff, each through a di
 | Efficiency | dead work, repeated or misplaced computation, runtime cost outside queries |
 | Design | the shape of new concepts future work will build on |
 | Data access | queries, indexes, schema, migrations |
+| React | problems whose explanation needs React's rendering model: render purity, effects, state structure, identity and keys, re-render fan-out, the server/client boundary |
 
 ## Ground rules
 

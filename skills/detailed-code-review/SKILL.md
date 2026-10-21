@@ -5,7 +5,7 @@ description: Detailed code review, where parallel specialist reviewers check one
 
 # Detailed Code Review
 
-Reviews one diff through up to seven **lenses**, each run as a parallel sub-agent in **isolation**: a reviewer sees the diff, its brief, and (for two lenses) the spec, never another reviewer's conclusions. A change can pass one lens and fail another: it follows every written rule but builds the wrong thing, or does exactly what was asked but rebuilds a helper the codebase already has. Separate reports stop one lens from masking another, so aggregation preserves the isolation too.
+Reviews one diff through up to eight **lenses**, each run as a parallel sub-agent in **isolation**: a reviewer sees the diff, its brief, and (for two lenses) the spec, never another reviewer's conclusions. A change can pass one lens and fail another: it follows every written rule but builds the wrong thing, or does exactly what was asked but rebuilds a helper the codebase already has. Separate reports stop one lens from masking another, so aggregation preserves the isolation too.
 
 | Reviewer | Runs | Gets the spec | Brief |
 |---|---|---|---|
@@ -16,6 +16,7 @@ Reviews one diff through up to seven **lenses**, each run as a parallel sub-agen
 | **Efficiency**: does every step the code executes earn its cost? | always | no | [reviewers/EFFICIENCY.md](reviewers/EFFICIENCY.md) |
 | **Design**: is a new precedent the right shape for future work? | when triggered | yes | [reviewers/DESIGN.md](reviewers/DESIGN.md) |
 | **Data access**: are the queries well supported, written, and placed? | when triggered | no | [reviewers/DATA.md](reviewers/DATA.md) |
+| **React**: does the code work with React's rendering model, or against it? | when triggered | no | [reviewers/REACT.md](reviewers/REACT.md) |
 
 Telling a reviewer what a change is meant to do measurably makes it miss problems, so only the two lenses that judge intent get the spec. Rules every reviewer follows (read-only, line pinning, finding format, severity, confidence, and which reviewer owns which concern) live in [reviewers/COMMON.md](reviewers/COMMON.md).
 
@@ -32,7 +33,7 @@ Telling a reviewer what a change is meant to do measurably makes it miss problem
   The three-dot range diffs against the merge-base. A PR/MR the user names is a fixed point at its target branch, reviewed with its head checked out as `HEAD`.
 - **Spec**: a path, the spec text, or `none`.
 - **Review root** (optional, from a calling skill): the absolute path of the checkout the diff lives in, such as a worktree. Reviewers run commands and read files under it; pins keep the diff's own paths.
-- **Overrides** (optional): `+design` / `-design` and `+data` / `-data` force an optional reviewer on or off.
+- **Overrides** (optional): `+design` / `-design`, `+data` / `-data`, and `+react` / `-react` force an optional reviewer on or off.
 
 **Called by another skill**: the caller's inputs are final, so run without asking the user anything. On a missing or invalid input, stop with a clear error. Return the report; posting or acting on findings is the caller's job.
 
@@ -64,7 +65,9 @@ Size alone never triggers it: a large feature that follows existing patterns set
 
 **Data access** runs when the change adds or edits at least one non-trivial query or schema change: migrations, schema or index definitions, ORM models and query calls, repository or DAO code, query builder chains, raw SQL strings. Trivial means a single-row lookup by primary key, or an edit that leaves what a query does unchanged (rename, formatting).
 
-Done when Design and Data access each have a run-or-skip decision with a one-line reason.
+**React** runs when the change adds or edits React components or hooks, or code that crosses a React server/client boundary.
+
+Done when Design, Data access, and React each have a run-or-skip decision with a one-line reason.
 
 ### 4. Spawn the reviewers in parallel
 
@@ -91,7 +94,7 @@ Done when every finding a reviewer returned is either in the report or in a `Dro
 ```markdown
 # Detailed code review: <diff description>
 
-Reviewers: Standards ✓ · Spec ✓ · Simplicity ✓ · Correctness ✓ · Efficiency ✓ · Design: skipped, <reason> · Data access ✓ (<reason>)
+Reviewers: Standards ✓ · Spec ✓ · Simplicity ✓ · Correctness ✓ · Efficiency ✓ · Design: skipped, <reason> · Data access ✓ (<reason>) · React ✓ (<reason>)
 
 ## Standards
 
