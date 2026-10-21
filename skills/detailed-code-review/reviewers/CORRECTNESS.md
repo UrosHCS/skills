@@ -23,4 +23,4 @@ Every finding needs a concrete trigger in its evidence: the input, state, or seq
 ## Not yours
 
 - Theoretical issues with no realistic trigger, and style.
-- Query performance and schema: Data access. Mismatches with the spec: Spec.
+- Work that runs for nothing but leaves the result correct: Efficiency. Query performance and schema: Data access. Mismatches with the spec: Spec.

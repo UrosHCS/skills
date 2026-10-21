@@ -4,15 +4,12 @@ Is this the simplest code that does the job and fits the codebase it lives in?
 
 Most of these checks need the codebase, not just the diff: search for what already exists before calling something new.
 
-**Safety floor**: never suggest removing validation of untrusted input, security checks, or protection against data loss, however unlikely the case they guard looks.
-
 ## Look for
 
 - **Reinvention**: new code that does what an existing helper, module, installed dependency, standard library, or platform API already does. Name the existing thing and where it lives.
 - **Dependency weight**: a new package that is overkill for how it is used: a one-liner, something an existing dependency or the platform already covers, or a large package used for one small feature. Check the manifest diff (`package.json`, `composer.json`, `go.mod`, `requirements*.txt`, `Cargo.toml`, ...).
 - **Needless complexity**: abstractions, options, parameters, or hooks with no current user; indirection that adds nothing; defensive handling of states that can't practically happen.
 - **Cleaner expression**: convoluted control flow with a simpler equivalent, dead or unreachable code, leftover debug output or commented-out code.
-- **Efficiency**: repeated or wasted work (recomputing in a loop, quadratic scans of large collections, unnecessary re-renders, reading a whole file to use one line). Only where it matters: say why the path is hot or the data large.
 
 ## Convention drift
 
@@ -56,5 +53,5 @@ Each smell reads _what it is_ → _how to fix_:
 
 ## Not yours
 
-- Bugs: Correctness. Written rules: Standards. Query performance: Data access.
+- Bugs: Correctness. Written rules: Standards. Runtime cost and dead work: Efficiency. Query performance: Data access.
 - Design judges whether a new architectural precedent is the right shape for future work. You judge consistency with established patterns, including structural conventions.

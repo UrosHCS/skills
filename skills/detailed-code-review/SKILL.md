@@ -5,7 +5,7 @@ description: Detailed code review, where parallel specialist reviewers check one
 
 # Detailed Code Review
 
-Reviews one diff through up to six **lenses**, each run as a parallel sub-agent in **isolation**: a reviewer sees the diff, its brief, and (for two lenses) the spec, never another reviewer's conclusions. A change can pass one lens and fail another: it follows every written rule but builds the wrong thing, or does exactly what was asked but rebuilds a helper the codebase already has. Separate reports stop one lens from masking another, so aggregation preserves the isolation too.
+Reviews one diff through up to seven **lenses**, each run as a parallel sub-agent in **isolation**: a reviewer sees the diff, its brief, and (for two lenses) the spec, never another reviewer's conclusions. A change can pass one lens and fail another: it follows every written rule but builds the wrong thing, or does exactly what was asked but rebuilds a helper the codebase already has. Separate reports stop one lens from masking another, so aggregation preserves the isolation too.
 
 | Reviewer | Runs | Gets the spec | Brief |
 |---|---|---|---|
@@ -13,6 +13,7 @@ Reviews one diff through up to six **lenses**, each run as a parallel sub-agent 
 | **Spec**: does the code do what the spec asked, and only that? | when a spec exists | yes | [reviewers/SPEC.md](reviewers/SPEC.md) |
 | **Simplicity**: is this the simplest code that fits the codebase? | always | no | [reviewers/SIMPLICITY.md](reviewers/SIMPLICITY.md) |
 | **Correctness**: does the code work, safely, for real inputs? | always | no | [reviewers/CORRECTNESS.md](reviewers/CORRECTNESS.md) |
+| **Efficiency**: does every step the code executes earn its cost? | always | no | [reviewers/EFFICIENCY.md](reviewers/EFFICIENCY.md) |
 | **Design**: is a new precedent the right shape for future work? | when triggered | yes | [reviewers/DESIGN.md](reviewers/DESIGN.md) |
 | **Data access**: are the queries well supported, written, and placed? | when triggered | no | [reviewers/DATA.md](reviewers/DATA.md) |
 
@@ -90,7 +91,7 @@ Done when every finding a reviewer returned is either in the report or in a `Dro
 ```markdown
 # Detailed code review: <diff description>
 
-Reviewers: Standards ✓ · Spec ✓ · Simplicity ✓ · Correctness ✓ · Design: skipped, <reason> · Data access ✓ (<reason>)
+Reviewers: Standards ✓ · Spec ✓ · Simplicity ✓ · Correctness ✓ · Efficiency ✓ · Design: skipped, <reason> · Data access ✓ (<reason>)
 
 ## Standards
 
