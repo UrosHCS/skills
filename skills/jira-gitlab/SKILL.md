@@ -47,4 +47,8 @@ The ticket is done when `view` on the new key shows T-shirt size `S (hours)`, th
 
 ## GitLab
 
+Branch name convention: `PRO-####-short-text`.
+
+Commit convention: `feat|chore|fix: short description - PRO-####`
+
 MRs target `develop`.
