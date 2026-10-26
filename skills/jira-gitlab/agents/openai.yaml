@@ -1,0 +1,5 @@
+interface:
+  display_name: "Jira & GitLab"
+  short_description: "Work with Jira tickets and GitLab via CLI"
+policy:
+  allow_implicit_invocation: true
