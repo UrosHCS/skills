@@ -61,7 +61,9 @@ Show the report unchanged.
 - a path and no line → `--file <path>`
 - `unpinned` → omit `--file` and both line flags
 
-A failed create stops the posting. Report the error and keep the pin the review gave.
+A failed create could be because GitLab only accepts lines that are part of the diff. In that case, post the comment on a line in the diff, or if it makes more sense, on a file or on the MR itself.
+
+If the comment creation failed for any other reason, report it to the user.
 
 ## Finish
 
