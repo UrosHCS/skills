@@ -1,0 +1,5 @@
+interface:
+  display_name: "Challenge Implementation"
+  short_description: "Look for a much smaller way to build a finished change"
+policy:
+  allow_implicit_invocation: true
