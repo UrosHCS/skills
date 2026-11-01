@@ -3,4 +3,4 @@ interface:
   short_description: "Triage feedback, implement valid points, and report decisions"
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true
